@@ -38,7 +38,7 @@ exports.createUser = async (req, res) => {
     }
     const newUser = new User({ username, password, name });
     await newUser.save();
-    res.status(201).json(newUser);
+    res.status(201).json({message:"Sucessfully registered",data:newUser});
   } catch (error) {
     res.status(500).json({
       message: "Error creating user , User is already registered",
