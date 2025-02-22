@@ -18,10 +18,8 @@ router.post('/', userCropController.createUserCrop);
 // Update a user by ID
 // router.put('/:id', userController.createUserCrop);
 
+router.put('/deactivate' , userCropController.deactivateUserCrop)
 // // Delete a user by ID
-// router.delete('/:id', userController.deleteUser);
+router.delete('/:id', userCropController.deleteUserCrop);
 
-// router.post('/login',userController.loginUser)
-
-// router.post('/userprofile',userController.userProfile)
 module.exports = router;

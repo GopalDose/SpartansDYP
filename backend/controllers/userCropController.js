@@ -26,11 +26,23 @@ exports.createUserCrop = async(req,res) => {
        const {name,userid,acres} = req.body
        const userCrop = new UserCrop({name,userid,acres});
        userCrop.save()
-       res.status(201).json(userCrop)
+       res.status(200).json(userCrop)
        
     } catch (error) {
         res.status(500).json({message : "Error creating user crop" ,userCrop})
     }
+}
+
+exports.deactivateUserCrop = async(req,res) =>{
+  try {
+    const {userid,_id} = req.body
+    const userCrop = await UserCrop.findOne({userid,_id})
+    if(!userCrop) return res.json({error : "crop not found"}).status(404)
+    userCrop.updateOne({state:!userCrop.state})
+    res.json(userCrop).status(200)
+  } catch (error) {
+    res.json({message : "Error occurred could not deactivate user crop",error}).status(500)
+  }
 }
 
 
