@@ -33,7 +33,7 @@ exports.createUser = async (req, res) => {
     const user = await User.findOne({ username });
     if (user) {
       return res
-        .status(200)
+        .status(400)
         .json({ message: "Username already exists", exists: true });
     }
     const newUser = new User({ username, password, name });
