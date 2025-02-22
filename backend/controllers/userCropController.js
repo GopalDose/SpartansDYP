@@ -12,16 +12,19 @@ exports.getAllUserCrops = async (req, res) => {
 
 exports.getCropByUserId = async (req, res) => {
   try {
-      const { userId } = req.query;
+      const { userid } = req.query; 
 
-      if (!userId) {
+      if (!userid) {
           return res.status(400).json({ message: "User ID is required" });
       }
 
-      const userCrops = await UserCrop.find({ userId }); // Ensure field name matches your schema
+      // Convert userid to ObjectId
+      const objectId = new mongoose.Types.ObjectId(userid);
+
+      const userCrops = await UserCrop.find({ userid: objectId });
 
       if (userCrops.length === 0) {
-          return res.status(404).json({ message: "User Crop not found" });
+          return res.status(404).json({ message: "No crops found for this user" });
       }
 
       res.status(200).json(userCrops);
