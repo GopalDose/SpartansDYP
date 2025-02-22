@@ -97,7 +97,7 @@ exports.loginUser = async (req, res) => {
     const user = await User.findOne({ username, password });
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    res.json({ message: "User logged in successfully" }).status(200);
+    res.json({ message: "User logged in successfully" , data:user }).status(200);
   } catch (error) {
     res.status(500).json({ message: "Error user is not registered ", error });
   }
