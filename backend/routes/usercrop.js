@@ -9,6 +9,7 @@ const userCropController = require('../controllers/userCropController');
 // Get all users
 router.get('/', userCropController.getAllUserCrops);
 
+router.get('/crops/:id', userCropController.getCropById);
 // Get a specific user by ID
 router.get('/:userid', userCropController.getCropByUserId);
 
