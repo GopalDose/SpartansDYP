@@ -5,7 +5,17 @@ exports.getAllUserCrops = async (req, res) => {
     const userCrops = await UserCrop.find();
     res.json(userCrops);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching user crops", error });
+    res.status(500).json({ message: "Error fetching  crops", error });
+  }
+};
+
+exports.getCropById = async (req, res) => {
+  try {
+    const userCrop = await UserCrop.findById(req.params.id);
+    if (!userCrop) return res.status(404).json({ message: "User crop not found" });
+    res.json(userCrop);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching user", error });
   }
 };
 
@@ -30,6 +40,9 @@ exports.getCropByUserId = async (req, res) => {
       res.status(500).json({ message: "Error getting user crops", error });
   }
 };
+
+
+
 
 
 exports.createUserCrop = async(req,res) => {
