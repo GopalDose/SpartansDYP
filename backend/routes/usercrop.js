@@ -10,7 +10,7 @@ const userCropController = require('../controllers/userCropController');
 router.get('/', userCropController.getAllUserCrops);
 
 // Get a specific user by ID
-router.get('/:id', userCropController.getCropByUserId);
+router.get('/:userid', userCropController.getCropByUserId);
 
 // Create a new user
 router.post('/', userCropController.createUserCrop);

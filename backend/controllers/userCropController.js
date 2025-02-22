@@ -2,7 +2,6 @@ const UserCrop = require("../models/crop");
 
 exports.getAllUserCrops = async (req, res) => {
   try {
-    
     const userCrops = await UserCrop.find();
     res.json(userCrops);
   } catch (error) {
@@ -12,16 +11,15 @@ exports.getAllUserCrops = async (req, res) => {
 
 exports.getCropByUserId = async (req, res) => {
   try {
-      const { userid } = req.query; 
 
+      const userid = req.params.userid
       if (!userid) {
           return res.status(400).json({ message: "User ID is required" });
       }
 
       // Convert userid to ObjectId
-      const objectId = new mongoose.Types.ObjectId(userid);
 
-      const userCrops = await UserCrop.find({ userid: objectId });
+      const userCrops = await UserCrop.find({userid});
 
       if (userCrops.length === 0) {
           return res.status(404).json({ message: "No crops found for this user" });
