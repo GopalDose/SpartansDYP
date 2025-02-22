@@ -11,22 +11,29 @@ exports.getTasks = async(req,res) => {
         res.status(500).json({ message: "Error fetching task", error });
     }
 }
+
 exports.createTask = async (req, res) => {
     try {
-        const { type, summary, price, userid , quantity , companyname ,name } = req.body;
+        console.log(req.body);
 
-        if (!type || !summary || !price || !userid || !quantity || !companyname || !name) {
-            return res.status(400).json({ message: "All fields are required" });
+        const { type, summary, price, userid, quantity, companyname, name } = req.body;
+        const cropid = req.params.cropid
+        // Validate required fields
+        if (!type || !summary || !name && !cropid) {
+            return res.status(400).json({ message: "Missing required fields" });
         }
-
+        req.body.cropid = cropid
         const newTask = new UserTask(req.body);
+
         await newTask.save();
 
         res.status(201).json({ message: "Task created successfully", task: newTask });
     } catch (error) {
+        console.error("Error creating task:", error);
         res.status(500).json({ message: "Error creating task", error });
     }
 };
+
 
 exports.getTasksByUserId = async (req, res) => {
     try {
@@ -56,7 +63,7 @@ exports.getTaskById = async (req, res) => {
             return res.status(400).json({ message: "Task ID is required" });
         }
 
-        const task = await UserTask.findById(id);
+        const task = await UserTask.find({cropid:req.params.id});
 
         if (!task) {
             return res.status(404).json({ message: "Task not found" });

@@ -47,6 +47,7 @@ exports.getCropByUserId = async (req, res) => {
 
 exports.createUserCrop = async(req,res) => {
     try {
+      
        const {name,userid,acres} = req.body
        const userCrop = new UserCrop({name,userid,acres});
        userCrop.save()
