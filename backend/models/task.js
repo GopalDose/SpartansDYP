@@ -9,6 +9,7 @@ const Task = mongoose.Schema({
     quantity:{Number},
     companyname:{String},
     userid:{String},
+    time : {TimeRanges},
     createdAt:{type:Date,required:false},
     updatedAt:{type:Date,required:false}
 },{timestamps:true});
