@@ -10,18 +10,26 @@ exports.getAllUserCrops = async (req, res) => {
   }
 };
 
-exports.getCropByUserId =  async(req,res) => {
-    try{
-        const {userId} = req.query
-        const userCrop = await UserCrop.findOne({userid:userId})
-        if (!userCrop) return res.status(404).json({ message: "User Crop not found" });
-        res.json(userCrop);
-      
+exports.getCropByUserId = async (req, res) => {
+  try {
+      const { userId } = req.query;
 
-    }catch(error){
-        res.status(500).json({message : "Error getting user crop ", error})
-    }
-}
+      if (!userId) {
+          return res.status(400).json({ message: "User ID is required" });
+      }
+
+      const userCrops = await UserCrop.find({ userId }); // Ensure field name matches your schema
+
+      if (userCrops.length === 0) {
+          return res.status(404).json({ message: "User Crop not found" });
+      }
+
+      res.status(200).json(userCrops);
+  } catch (error) {
+      res.status(500).json({ message: "Error getting user crops", error });
+  }
+};
+
 
 
 exports.createUserCrop = async(req,res) => {
