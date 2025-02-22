@@ -30,9 +30,7 @@ exports.createUser = async (req, res) => {
         .status(400)
         .json({ message: "Userame and Passowrd are required" });
     
-    const user = User.findOne({username:username})
-    if(user)
-        return res.status(500).json({message: "User already registered"})
+
 
     
     const newUser = new User({ username, password });
