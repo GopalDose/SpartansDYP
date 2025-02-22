@@ -1,0 +1,22 @@
+.content.floating{
+    position: absolute;
+    top: 0;
+    background: rgba(0, 0, 0, 0.534);
+}
+
+.light-submit {
+    margin: 0px 0 10px 0;
+    border: none;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 10px;
+    height: 40px;
+    width: 100%;
+    cursor: pointer;
+  }
+  
+  .light-submit:hover {
+    background-color: var(--third);
+    color: var(--second);
+  }

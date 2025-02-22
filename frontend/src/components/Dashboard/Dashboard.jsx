@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './Dashboard.css'
 import Footer from '../Footer/Footer'
 import Navbar from '../Navbar/Navbar'
@@ -6,8 +6,11 @@ import icon1 from "../../assets/images/watering-plants.png";
 import { PiPlant } from "react-icons/pi";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { Link } from 'react-router-dom';
+import AddCrop from '../AddCrop/AddCrop';
 
 const Dashboard = () => {
+    const [showAddCrop, setShowAddCrop] = useState(false);
+
     return (
         <>
             <Navbar />
@@ -40,12 +43,12 @@ const Dashboard = () => {
                                 </div>
                             </div>
                         </Link>
-                        <Link className="register-crop">
+                        <div className="register-crop" onClick={() => setShowAddCrop(true)}>
                             <div className="addbtn">
-                            <IoMdAddCircleOutline />
-                            Add Crop
+                                <IoMdAddCircleOutline />
+                                Add Crop
                             </div>
-                        </Link>
+                        </div>
                     </div>
                     .<div className="title">Our Services</div>
                     <div className="services-container">
@@ -74,6 +77,7 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+            {showAddCrop && <AddCrop close={() => setShowAddCrop(false)} />}
             <Footer />
         </>
     )
