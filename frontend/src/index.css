@@ -67,3 +67,9 @@
   height: 70px;
   border-radius: 50%;
 }
+
+#google_translate_element{
+  position: absolute;
+  right: 0;
+  z-index: 1;
+}
