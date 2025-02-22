@@ -23,4 +23,5 @@ router.delete('/:id', userController.deleteUser);
 
 router.post('/login',userController.loginUser)
 
+router.post('/userprofile',userController.userProfile)
 module.exports = router;
