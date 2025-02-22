@@ -72,3 +72,15 @@
     width: 70px;
   }
   
+
+  .dlt-btn{
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 20px;
+    color: #999;
+    transition: all ease .3s;
+  }
+
+  .dlt-btn:hover{
+    color: red;
+  }

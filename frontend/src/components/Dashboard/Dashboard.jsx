@@ -33,8 +33,8 @@ const Dashboard = () => {
             }
     
             try {
-                const response = await fetch(`http://localhost:4137/api/usercrop?userid=${userId}`);
-                if (!response.ok) throw new Error("Failed to fetch crops");
+                const response = await fetch(`http://localhost:4137/api/usercrop/${userId}`);
+                // if (!response.ok) throw new Error("Failed to fetch crops");
     
                 const data = await response.json();
                 setCrops(data);
