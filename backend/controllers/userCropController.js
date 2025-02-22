@@ -12,6 +12,7 @@ exports.getAllUserCrops = async (req, res) => {
 exports.getCropByUserId = async (req, res) => {
   try {
 
+<<<<<<< HEAD
       const userid = req.params.userid
       if (!userid) {
           return res.status(400).json({ message: "User ID is required" });
@@ -20,9 +21,23 @@ exports.getCropByUserId = async (req, res) => {
       // Convert userid to ObjectId
 
       const userCrops = await UserCrop.find({userid});
+=======
+      let query = {};
+
+      if (userid) {
+          console.log(userid)
+          try {
+              query.userid = new mongoose.Types.ObjectId(userid);
+          } catch (error) {
+              return res.status(400).json({ message: "Invalid User ID format" });
+          }
+      }
+
+      const userCrops = await UserCrop.find(query);
+>>>>>>> b1dd0fac034a86fbdcac3cfe0bc404f199c45595
 
       if (userCrops.length === 0) {
-          return res.status(404).json({ message: "No crops found for this user" });
+          return res.status(404).json({ message: "No crops found" });
       }
 
       res.status(200).json(userCrops);
@@ -30,7 +45,6 @@ exports.getCropByUserId = async (req, res) => {
       res.status(500).json({ message: "Error getting user crops", error });
   }
 };
-
 
 
 exports.createUserCrop = async(req,res) => {

@@ -4,14 +4,17 @@ import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
 import StatsCards from '../StatsCards/StatsCards'; // Import the new component
 import { FaLeaf, FaTree, FaCloudSun, FaSun } from 'react-icons/fa';
+import { useParams } from "react-router-dom";
+import { RiDeleteBin7Fill } from "react-icons/ri";
 
 const YeildTable = () => {
+  const { id } = useParams(); 
   return (
     <>
       <Navbar />
       <div className="yeild">
         
-      <h1>Wheat</h1>
+      <h1>Wheat <RiDeleteBin7Fill /></h1>
         <div className="data">Created Date: 10/01/2021</div>
         <StatsCards /> {/* Add the StatsCards component here */}
 

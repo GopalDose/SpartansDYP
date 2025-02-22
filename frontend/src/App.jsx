@@ -10,6 +10,8 @@ import CropRecommendationOutput from './components/CropRecommendationOutput/Crop
 import FuturePrice from './components/FuturePrice/FuturePrice';
 import { SiChatbot } from "react-icons/si";
 import YeildTable from './components/YeildTable/YeildTable';
+import { useParams } from "react-router-dom"; // Import useParams in YieldTable
+
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -37,7 +39,7 @@ const App = () => {
             <Route path="/crop-recc" element={<CropRecommendation />} />
             <Route path="/crop-recc-out" element={<CropRecommendationOutput />} />
             <Route path="/price" element={<FuturePrice />} />
-            <Route path="/yeild" element={<YeildTable />} />
+            <Route path="/yield/:id" element={<YeildTable />} />
           </Routes>
           <div className="chatbot">
             <SiChatbot />
