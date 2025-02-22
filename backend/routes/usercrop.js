@@ -16,9 +16,9 @@ router.get('/:id', userCropController.getCropByUserId);
 router.post('/', userCropController.createUserCrop);
 
 // Update a user by ID
-// router.put('/:id', userController.createUserCrop);
+router.put('/:id', userCropController.updateUserCrop);
 
-router.put('/deactivate' , userCropController.deactivateUserCrop)
+router.put('/deactivate/:id' , userCropController.deactivateUserCrop)
 // // Delete a user by ID
 router.delete('/:id', userCropController.deleteUserCrop);
 

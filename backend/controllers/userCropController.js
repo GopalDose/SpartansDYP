@@ -2,7 +2,8 @@ const UserCrop = require("../models/crop");
 
 exports.getAllUserCrops = async (req, res) => {
   try {
-    const userCrops = await UserCrop.find();
+    const {userid} = req.body
+    const userCrops = await UserCrop.find(userid);
     res.json(userCrops);
   } catch (error) {
     res.status(500).json({ message: "Error fetching user crops", error });
@@ -35,8 +36,9 @@ exports.createUserCrop = async(req,res) => {
 
 exports.deactivateUserCrop = async(req,res) =>{
   try {
-    const {userid,_id} = req.body
-    const userCrop = await UserCrop.findOne({userid,_id})
+    const {userid} = req.body
+    const id = req.params.id
+    const userCrop = await UserCrop.find({userid,id})
     if(!userCrop) return res.json({error : "crop not found"}).status(404)
     userCrop.updateOne({state:!userCrop.state})
     res.json(userCrop).status(200)
@@ -45,6 +47,20 @@ exports.deactivateUserCrop = async(req,res) =>{
   }
 }
 
+exports.updateUserCrop = async(req,res) => {
+  try {
+  
+    const userCrop = await UserCrop.findByIdAndUpdate(req.params.id,req.body,{
+      new:true,
+    })
+
+    if(!userCrop) res.json({error : "crop not found"}).status(404)
+    userCrop.updateOne()
+    res.json(userCrop).status(200)
+  } catch (error) {
+    res.json({message : "Error occurred could not find the crop",error}).status(500)
+  }
+}
 
 exports.deleteUserCrop = async(req,res) => {
   try {
