@@ -1,0 +1,28 @@
+/* Add these styles to your App.css */
+
+/* Mobile translation widget styles */
+@media screen and (max-width: 768px) {
+    #google_translate_element_mobile {
+      display: block !important;
+      background: white;
+      padding: 8px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+  
+    /* Adjust chatbot position for mobile */
+    .chatbot {
+      bottom: 20px !important;
+    }
+  }
+  
+  /* Optional: Add smooth transitions for the translation widget */
+  #google_translate_element,
+  #google_translate_element_mobile {
+    transition: all 0.3s ease;
+  }
+  
+  /* Ensure translation dropdown appears above other elements */
+  .goog-te-menu-frame {
+    z-index: 1001 !important;
+  }

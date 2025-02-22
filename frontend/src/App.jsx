@@ -10,8 +10,10 @@ import CropRecommendationOutput from './components/CropRecommendationOutput/Crop
 import FuturePrice from './components/FuturePrice/FuturePrice';
 import { SiChatbot } from "react-icons/si";
 import YeildTable from './components/YeildTable/YeildTable';
-import { useParams } from "react-router-dom"; // Import useParams in YieldTable
+import { useParams } from "react-router-dom";
 
+// Optional: Import the translation hook if you need direct access to translation functions
+import { useTranslation } from './contexts/TranslationContext';
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -24,6 +26,8 @@ const App = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // We don't need to wrap the Router in TranslationProvider here since it's already in main.jsx
+
   return (
     <Router>
       {loading ? (
@@ -32,6 +36,18 @@ const App = () => {
         </div>
       ) : (
         <>
+          {/* Adding a hidden translation element for mobile responsiveness */}
+          <div 
+            id="google_translate_element_mobile" 
+            style={{ 
+              position: 'fixed', 
+              bottom: '60px', // Position above chatbot
+              right: '20px',
+              zIndex: 1000,
+              display: 'none', // Hidden by default, can be shown via media query
+            }} 
+          />
+
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} />
@@ -41,6 +57,7 @@ const App = () => {
             <Route path="/price" element={<FuturePrice />} />
             <Route path="/yield/:id" element={<YeildTable />} />
           </Routes>
+
           <div className="chatbot">
             <SiChatbot />
           </div>
