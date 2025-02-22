@@ -5,7 +5,7 @@ const userCropSchema = new mongoose.Schema({
     name:{type:String},
     userid:{type:String},
     acres:{type:Number},
-    state:{type:Boolean},
+    state:{type:Boolean,default:true},
     createdAt:{type:Date}
 }, { timestamps: true })
 
