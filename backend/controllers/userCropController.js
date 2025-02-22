@@ -32,3 +32,16 @@ exports.createUserCrop = async(req,res) => {
         res.status(500).json({message : "Error creating user crop" ,userCrop})
     }
 }
+
+
+exports.deleteUserCrop = async(req,res) => {
+  try {
+    const deletedUserCrop = await UserCrop.findByIdAndDelete(req.params.id);
+    if (!deletedUserCrop)
+      return res.status(404).json({ message: "User Crop not found" });
+    res.json(deletedUserCrop).status(200);
+
+  } catch (error) {
+    res.json({message: "Error Crop cannot be deleted",error}).status(500);
+  }
+}
