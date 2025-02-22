@@ -17,10 +17,12 @@ connectDB();
 // Routes
 const userRoutes = require('./routes/user');
 const cropRoutes = require('./routes/usercrop')
+const userTaskRoutes = require('./routes/tasks')
 
 
 app.use('/api/users', userRoutes);
 app.use('/api/usercrop',cropRoutes)
+app.use('/api/tasks',userTaskRoutes)
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
