@@ -2,8 +2,8 @@ const UserCrop = require("../models/crop");
 
 exports.getAllUserCrops = async (req, res) => {
   try {
-    const {userid} = req.body
-    const userCrops = await UserCrop.find(userid);
+    
+    const userCrops = await UserCrop.find(req.params.id);
     res.json(userCrops);
   } catch (error) {
     res.status(500).json({ message: "Error fetching user crops", error });
