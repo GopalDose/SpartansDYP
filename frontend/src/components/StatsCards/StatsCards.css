@@ -1,0 +1,34 @@
+.stats-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    padding: 20px 10%;
+  }
+  
+  .stats-card {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 200px;
+  }
+  
+  .stats-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  
+  .stats-card h2 {
+    font-size: 24px;
+    margin: 5px 0;
+  }
+  
+  .stats-card p {
+    color: #666;
+    font-size: 14px;
+  }
+  
