@@ -24,16 +24,13 @@ exports.getUserById = async (req, res) => {
 // Create a new user
 exports.createUser = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password ,name} = req.body;
     if (!username || !password)
       return res
         .status(400)
         .json({ message: "Userame and Passowrd are required" });
     
-
-
-    
-    const newUser = new User({ username, password });
+    const newUser = new User({ username, password ,name});
     await newUser.save();
     res.status(201).json(newUser);
   } catch (error) {
