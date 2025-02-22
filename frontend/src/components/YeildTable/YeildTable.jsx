@@ -20,6 +20,7 @@ const YeildTable = () => {
   const [showForm, setShowForm] = useState(false);
   const [totalExpense, setTotalExpense] = useState(0);
   const [totalTasks, setTotalTasks] = useState(0);
+  const [selectedTask, setSelectedTask] = useState(null);
 
   useEffect(() => {
     fetchCropDetails();
@@ -58,26 +59,40 @@ const YeildTable = () => {
     }
   };
 
-  // Function to delete the crop
-  const handleDelete = async () => {
-    if (!window.confirm("Are you sure you want to delete this crop?")) return;
+  // Function to delete a task
+  const handleDeleteTask = async () => {
+    if (!selectedTask) return;
 
+    try {
+      const response = await fetch(`http://localhost:4137/api/tasks/${selectedTask._id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) throw new Error("Failed to delete task");
+
+      toast.success("Task deleted successfully!");
+      setSelectedTask(null);
+      fetchTasks(); // Refresh tasks list
+    } catch (error) {
+      toast.error("Error deleting task");
+    }
+  };
+
+  const handleDeleteYield = async () => {
     try {
       const response = await fetch(`http://localhost:4137/api/usercrop/${id}`, {
         method: "DELETE",
       });
-
+  
       if (!response.ok) throw new Error("Failed to delete crop");
-
+  
       toast.success("Crop deleted successfully!");
-
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1500);
+      navigate("/dashboard"); // Redirect to dashboard after successful deletion
     } catch (error) {
       toast.error("Error deleting crop");
     }
   };
+  
 
   return (
     <>
@@ -92,11 +107,10 @@ const YeildTable = () => {
           <>
             <h1>
               {crop?.name}
-              <RiDeleteBin7Fill onClick={handleDelete} className='dlt-btn' />
+              <RiDeleteBin7Fill onClick={() => handleDeleteYield()} className='dlt-btn' />
             </h1>
             <div className="data">Created Date: {new Date(crop?.createdAt).toLocaleDateString()}</div>
             
-            {/* Pass calculated values to StatsCards */}
             <StatsCards totalTasks={totalTasks} totalExpense={totalExpense} />
 
             <div className="newentry" onClick={() => setShowForm(true)} style={{ cursor: "pointer" }}>
@@ -107,7 +121,7 @@ const YeildTable = () => {
               <tbody>
                 {tasks.length > 0 ? (
                   tasks.map((task) => (
-                    <tr key={task._id} className="data-row">
+                    <tr key={task._id} className="data-row" onClick={() => setSelectedTask(task)}>
                       <td className="icon-cell">
                         {task.type === "Sowing" && <FaLeaf size={24} color="#4CAF50" />}
                         {task.type === "Fertilizer" && <FaTree size={24} color="#4CAF50" />}
@@ -115,7 +129,6 @@ const YeildTable = () => {
                         {task.type === "Harvesting" && <FaSun size={24} color="#FFC107" />}
                         {task.type === "Pesticides" && <FaBug size={24} color="#FF5722" />}
                         {task.type === "Cultivation" && <FaTractor size={24} color="#8B4513" />}
-
                       </td>
                       <td>
                         <div className="main-text">{task.type}</div>
@@ -137,6 +150,20 @@ const YeildTable = () => {
 
       {/* Show AddTask form */}
       {showForm && <AddTask close={() => setShowForm(false)} refreshTasks={fetchTasks} />}
+
+      {/* Popup for task deletion */}
+      {selectedTask && (
+        <div className="popup">
+          <div className="popup-content">
+            <h3>Delete Task?</h3>
+            <p>Are you sure you want to delete <b>{selectedTask.name}</b>?</p>
+            <div className="popup-buttons">
+              <button onClick={handleDeleteTask} className="delete-btn">Delete</button>
+              <button onClick={() => setSelectedTask(null)} className="cancel-btn">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </>
