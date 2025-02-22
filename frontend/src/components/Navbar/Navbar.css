@@ -1,0 +1,33 @@
+header{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 100px;
+    align-items: center;
+    background: #F9FAFB;
+}
+
+header .logo{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: 1.2rem;
+    font-weight: bolder;
+    color: var(--first);
+}
+
+header .logo img{
+    width: 40px;
+}
+
+header nav ul{
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+}
+
+header nav a{
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--first);
+    text-transform: uppercase;
+}

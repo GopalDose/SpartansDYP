@@ -1,0 +1,71 @@
+.outputblock {
+    background-color: #E0F7F0;
+    padding: 20px 10%;
+    min-height: 100vh;
+}
+
+.outputblock .inner-container {
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+}
+
+.outputblock h1 {
+    font-size: 2rem;
+    color: #2c3e50;
+}
+
+.outputblock .list-container {
+    margin-top: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.crop {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.crop:last-child {
+    border-bottom: none;
+}
+
+.crop .name {
+    display: flex;
+    align-items: center;
+    font-size: 1.3rem;
+    font-weight: 800;
+    gap: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.crop .name:hover {
+    background: #e3f2fd;
+}
+
+.crop .name img {
+    width: 50px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.crop.open .name img {
+    transform: rotate(90deg);
+}
+
+.crop .data {
+    display: none;
+    padding: 10px;
+    text-align: left;
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+.crop.open .data {
+    display: block;
+}

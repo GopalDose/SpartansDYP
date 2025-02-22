@@ -1,0 +1,65 @@
+.service {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.service div {
+    flex: 1 1 20rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: rgba(149, 157, 165, 0.1) 0px 8px 24px;
+    border-radius: 10px;
+    border: none;
+    padding: 30px;
+    gap: 10px;
+    transition: all ease .3s;
+}
+
+.service div:hover{
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.service div h2 {
+    font-size: 1.5rem;
+    color: #4B5563;
+    font-weight: bolder;
+}
+
+.service div p {
+    color: #4B5563;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.service-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5% 10%;
+    background-color: #f4fdf7;
+    gap: 2rem;
+}
+
+.service-content .title h2 {
+    font-family: 'Outfit';
+    font-size: 2rem;
+    font-weight: bolder;
+    text-align: center;
+    color: #000;
+    line-height: 1.1;
+}
+
+.service-content .title p {
+    color: #4B5563;
+    margin-top: 30px;
+    font-size: 1.2rem;
+    font-weight: 500;
+}

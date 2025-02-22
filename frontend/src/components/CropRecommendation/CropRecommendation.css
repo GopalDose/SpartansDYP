@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Outfit:wght@100..900&display=swap');
+
+
+.crop-form{
+    display: grid;
+    grid-template-columns : repeat(3, 1fr); ;
+    grid-gap: 20px;
+    padding: 50px;
+    background-color: #fff;
+    
+}
+
+.crop-form .form-title{
+    text-align: center;
+    grid-column: span 3;
+    color: var(--second);
+}
+
+.inline-flex{
+    width: 100%;
+    display: inline;
+    gap: 10px;
+    
+}
+
+.sm-inline-flex{
+    width: 100%;
+    column-span: all;
+    grid-column: span 3;
+    display: inline;
+}
+
+.crop-form input{
+    border: 1.5px solid #ecedec;
+    border-radius: 10px;
+    height: 50px;
+    grid-column: span 1;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    transition: 0.2s ease-in-out;
+  }
+
+.crop-form input , select{
+    height: 40px;
+    border-radius: 10px;
+    border: none;
+    outline: 1px solid rgba(128, 128, 128, 0.521);
+    font-size: 16px;
+    font-family: 'Outfit';
+    padding: 5px 10px;
+}
+
+::placeholder {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  }
+
+  .crop-form input:focus {
+    outline: none;
+  }
+  
+  .inputForm:focus-within {
+    border: 1.5px solid var(--second);
+  }
+  
+  .crop-form input:focus {
+    outline: none;
+  }
+  
+  .crop-form input:focus-within {
+    border: 1.5px solid var(--second);
+  }
+
+
+  .submitbtn {
+    background-color: var(--first);
+    border: none;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 10px;
+    height: 40px;
+    grid-column: span 3;
+    width: 100%;
+    box-shadow: -2px 2px 4px rgba(128, 128, 128, 0.521);
+    cursor: pointer;
+  }
+
+  
+  .button-submit:hover {
+    background-color: var(--second);
+  }
+  
+  .content {
+    width: 100%;
+    height: 100vh;
+    background: rgba(215, 245, 236, 0.786);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
