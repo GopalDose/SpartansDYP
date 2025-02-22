@@ -1,3 +1,57 @@
 .yeild{
     padding: 20px 10%;
+    background: #F9FAFB;
+}
+
+.yeild .table{
+    margin: auto;
+    width: 90%;
+    margin-top: 20px;
+}
+
+.table tr{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border-bottom: 1px solid #c7c7c7;
+}
+
+.table tr .newentry{
+    padding: 10px;
+    text-align: center;
+    color: white;
+    font-weight: 700;
+}
+
+.table tr.data{
+    padding: 10px 50px;
+}
+
+.table tr .sr{
+    gap: 1.3rem;
+    display: flex;
+    align-items: center;
+}
+
+.table tr .price{
+    gap: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.table tr .price button{
+    padding: 10px 20px;
+    border: none;
+    background: var(--first);
+    color: white;
+}
+
+.table tr:nth-child(even) {
+    background: var(--third);
+}
+
+.table .newentry{
+    background: var(--second);
+    width: 100%;
 }
