@@ -7,6 +7,7 @@ const Task = mongoose.Schema({
     price:{Number},
     cropid:{String},
     quantity:{Number},
+    companyname:{String},
     userid:{String},
     createdAt:{type:Date,required:false},
     updatedAt:{type:Date,required:false}
