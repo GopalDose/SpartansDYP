@@ -24,14 +24,14 @@ exports.getUserById = async (req, res) => {
 // Create a new user
 exports.createUser = async (req, res) => {
     try {
-        const { username, password } = req.body;
-        if (!username || !password) return res.status(400).json({ message: "Name and email are required" });
+        const { name, password } = req.body;
+        if (!username || !password) return res.status(400).json({ message: "Userame and Passowrd are required" });
 
         const newUser = new User({ username, password });
         await newUser.save();
         res.status(201).json(newUser);
     } catch (error) {
-        res.status(500).json({ message: "Error creating user", error });
+        res.status(500).json({ message: "Error creating user , User is already registered", error });
     }
 };
 
@@ -58,3 +58,18 @@ exports.deleteUser = async (req, res) => {
         res.status(500).json({ message: "Error deleting user", error });
     }
 };
+
+
+exports.loginUser = async (req,res) =>{
+    try{
+        const {username,password } = req.body;
+        const user = await User.findOne({username,password})
+        if(!user)
+            return res.status(404).json({message : "User not found"})
+        
+        res.json({message : "User logged in successfully"}).status(200)
+    }
+    catch (error){
+        res.status(500).json({message : "Error user is not registered " , error})
+    }
+}
