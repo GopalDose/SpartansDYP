@@ -13,7 +13,7 @@ exports.getAllUserCrops = async (req, res) => {
 exports.getCropByUserId =  async(req,res) => {
     try{
         const {userId} = req.query
-        const userCrop = await UserCrop.find(userId)
+        const userCrop = await UserCrop.findOne({userid:userId})
         if (!userCrop) return res.status(404).json({ message: "User Crop not found" });
         res.json(userCrop);
       
