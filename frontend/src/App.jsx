@@ -10,7 +10,7 @@ import CropRecommendationOutput from './components/CropRecommendationOutput/Crop
 import FuturePrice from './components/FuturePrice/FuturePrice';
 import { SiChatbot } from "react-icons/si";
 import YeildTable from './components/YeildTable/YeildTable';
-import { useParams } from "react-router-dom";
+import Chatbot from "./components/Chatbot/Chatbot";
 
 // Optional: Import the translation hook if you need direct access to translation functions
 import { useTranslation } from './contexts/TranslationContext';
@@ -28,8 +28,6 @@ const App = () => {
 
     return () => clearTimeout(timer);
   }, []);
-
-  // We don't need to wrap the Router in TranslationProvider here since it's already in main.jsx
 
   return (
     <Router>
@@ -64,9 +62,10 @@ const App = () => {
             <Route path="/finance" element={<Finance />} />
           </Routes>
 
-          <div className="chatbot">
-            <SiChatbot />
-          </div>
+          {/* Chatbot component */}
+          <Chatbot />
+
+          
         </>
       )}
     </Router>
