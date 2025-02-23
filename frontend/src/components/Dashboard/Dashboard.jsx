@@ -31,21 +31,21 @@ const Dashboard = () => {
                 handleToast("User ID not found. Please log in.", "error");
                 return;
             }
-    
+
             try {
                 const response = await fetch(`http://localhost:4137/api/usercrop/${userId}`);
                 // if (!response.ok) throw new Error("Failed to fetch crops");
-    
+
                 const data = await response.json();
                 setCrops(data);
             } catch (error) {
                 handleToast(error.message, "error");
             }
         };
-    
+
         fetchCrops();
     }, []);
-    
+
 
     return (
         <>
@@ -56,18 +56,19 @@ const Dashboard = () => {
                     <div className="block">Good Morning</div>
                     <div className="title">Agricultural Dashboard</div>
 
-                    {/* Display fetched crops */}
                     <div className="register-crops">
                         {crops.length > 0 ? (
-                            crops.map((crop, index) => (
-                                <Link to={`/yield/${crop._id}`} key={index} className="register-crop">
-                                    <div className="data">
-                                        <div className="title">{crop.name}</div>
-                                        <div className="sowingdate">{crop.createdAt}</div>
-                                        <div className="area">{crop.acres} acres</div>
-                                    </div>
-                                </Link>
-                            ))
+                            crops
+                                .filter(crop => crop.state) // Only include crops with state: true
+                                .map((crop, index) => (
+                                    <Link to={`/yield/${crop._id}`} key={index} className="register-crop">
+                                        <div className="data">
+                                            <div className="title">{crop.name}</div>
+                                            <div className="sowingdate">{crop.createdAt}</div>
+                                            <div className="area">{crop.acres} acres</div>
+                                        </div>
+                                    </Link>
+                                ))
                         ) : (
                             <p>No crops found</p>
                         )}
@@ -81,9 +82,17 @@ const Dashboard = () => {
                         </div>
                     </div>
 
+
                     {/* Services Section */}
                     <div className="title">Our Services</div>
                     <div className="services-container">
+                        <Link to="/prevyield">
+                            <div className="services-card">
+                                <PiPlant className="icon" />
+                                <div className="service__title">Previous Yields</div>
+                                <p>AI-powered insights for optimal crop selection and yield forecasting</p>
+                            </div>
+                        </Link>
                         <Link to="/crop-recc">
                             <div className="services-card">
                                 <PiPlant className="icon" />
@@ -91,6 +100,7 @@ const Dashboard = () => {
                                 <p>AI-powered insights for optimal crop selection and yield forecasting</p>
                             </div>
                         </Link>
+
                     </div>
                 </div>
             </div>

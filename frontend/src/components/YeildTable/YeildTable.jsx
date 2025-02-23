@@ -113,17 +113,17 @@ const YeildTable = () => {
       if (!response.ok) throw new Error("Failed to complete crop");
 
       toast.success("Crop marked as completed!");
-      fetchCropDetails(); // Refresh data after marking as complete
+      fetchCropDetails(); 
     } catch (error) {
       toast.error("Error completing crop");
     }
   };
 
-
   return (
     <>
       <Navbar />
       <ToastContainer />
+
       <div className="yeild">
         {loading ? (
           <p>Loading crop details...</p>
@@ -131,20 +131,36 @@ const YeildTable = () => {
           <p>Error: {error}</p>
         ) : (
           <>
+            {/* Back Button above the name */}
+            <div className="back-btn-container">
+              <button className="nav-button" onClick={() => navigate("/dashboard")}>
+                Back
+              </button>
+            </div>
+
             <h1>
               {crop?.name}
               <RiDeleteBin7Fill onClick={() => handleDeleteYield()} className='dlt-btn' />
               <div className="completed">
-                <button onClick={handleCompleteYield}>Completed</button>
+                {crop.state ? (
+                  <>
+                    <button onClick={handleCompleteYield}>Completed</button>
+                    <button className="nav-button finance-button" onClick={() => navigate(`/finance/${id}`)}>
+                      Financial Planning
+                    </button>
+                  </>
+                ) : ''}
               </div>
             </h1>
             <div className="data">Created Date: {new Date(crop?.createdAt).toLocaleDateString()}</div>
 
             <StatsCards totalTasks={totalTasks} totalExpense={totalExpense} status={crop.state} />
 
-            <div className="newentry" onClick={() => setShowForm(true)} style={{ cursor: "pointer" }}>
-              + Add New Entry
-            </div>
+            {crop.state ? (
+              <div className="newentry" onClick={() => setShowForm(true)} style={{ cursor: "pointer" }}>
+                + Add New Entry
+              </div>
+            ) : ''}
 
             <table className="table">
               <tbody>

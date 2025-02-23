@@ -14,6 +14,8 @@ import { useParams } from "react-router-dom";
 
 // Optional: Import the translation hook if you need direct access to translation functions
 import { useTranslation } from './contexts/TranslationContext';
+import PrevYield from './components/PrevYield/PrevYield';
+import FinancialPlanning from './components/FinancialPlanning/FinancialPlanning';
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -56,6 +58,8 @@ const App = () => {
             <Route path="/crop-recc-out" element={<CropRecommendationOutput />} />
             <Route path="/price" element={<FuturePrice />} />
             <Route path="/yield/:id" element={<YeildTable />} />
+            <Route path="/prevyield" element={<PrevYield />} />
+            <Route path="/finance/:id" element={<FinancialPlanning />} />
           </Routes>
 
           <div className="chatbot">

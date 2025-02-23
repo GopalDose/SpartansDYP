@@ -58,18 +58,25 @@ exports.createUserCrop = async(req,res) => {
     }
 }
 
-exports.deactivateUserCrop = async(req,res) =>{
+exports.deactivateUserCrop = async (req, res) => {
   try {
-    // const {userid} = req.body
-    const id = req.params.id
-    const userCrop = await UserCrop.findOne(req.params.id)
-    if(!userCrop) return res.json({error : "crop not found"}).status(404)
-    userCrop.updateOne({state:false});
-    res.json(userCrop).status(200)
+    const id = req.params.id;
+    
+    // Find crop by ID
+    const userCrop = await UserCrop.findById(id);
+    if (!userCrop) {
+      return res.status(404).json({ error: "Crop not found" });
+    }
+
+    // Update state
+    await UserCrop.findByIdAndUpdate(id, { state: false }, { new: true });
+
+    res.status(200).json({ message: "Crop marked as completed!" });
   } catch (error) {
-    res.json({message : "Error occurred could not deactivate user crop",error}).status(500)
+    res.status(500).json({ message: "Error occurred, could not deactivate user crop", error });
   }
-}
+};
+
 
 exports.updateUserCrop = async(req,res) => {
   try {
