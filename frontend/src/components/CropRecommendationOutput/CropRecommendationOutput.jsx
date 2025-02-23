@@ -1,35 +1,40 @@
 import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './CropRecommendationOutput.css';
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
 import cropIcon from '../../assets/images/crop.png';
 
-const recommendedCrops = [
-    {
-        name: "Wheat",
-        reason: "Chosen due to moderate NPK levels, optimal temperature (10-25°C), and moderate rainfall (50-100 cm). Ideal for loamy soil with a pH range of 6.0-7.5. Prefers states like Punjab, Haryana, UP, and MP.",
-        fertilizer: "Urea, DAP, MOP",
-        harvestDays: "120-150 days"
-    },
-    {
-        name: "Rice",
-        reason: "Selected for high Nitrogen requirement, warm temperature (25-35°C), high humidity (above 70%), and heavy rainfall (100-200 cm). Grows best in clayey soil with a pH range of 5.5-7.0. Suitable for states like West Bengal, Odisha, Tamil Nadu, and Kerala.",
-        fertilizer: "Nitrogen, Phosphorus, Potassium",
-        harvestDays: "90-120 days"
-    },
-    {
-        name: "Maize",
-        reason: "Recommended due to moderate Nitrogen and high Phosphorus demand, warm temperature (18-30°C), and moderate rainfall (50-100 cm). Suitable for sandy loam soil with a pH range of 5.8-7.2. Ideal for states like Karnataka, Maharashtra, Bihar, and Andhra Pradesh.",
-        fertilizer: "NPK 20-20-20, Zinc",
-        harvestDays: "100-120 days"
-    }
-];
-
 const CropRecommendationOutput = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const [openIndex, setOpenIndex] = useState(null);
+
+    // Get data from navigation state
+    const { recommendations = [], formData = {}, selectedState = '' } = location.state || {};
+
+    // Redirect if no data
+    if (!location.state || !recommendations.length) {
+        navigate('/crop-recommendation');
+        return null;
+    }
 
     const toggleOpen = (index) => {
         setOpenIndex(openIndex === index ? null : index);
+    };
+
+    // Format input values for display
+    const formatInputValue = (key, value) => {
+        const units = {
+            potassium: 'mg/kg',
+            nitrogen: 'mg/kg',
+            sodium: 'mg/kg',
+            temperature: '°C',
+            rainfall: 'cm/year',
+            humidity: '%',
+            ph: ''
+        };
+        return `${value}${units[key] ? ' ' + units[key] : ''}`;
     };
 
     return (
@@ -37,23 +42,74 @@ const CropRecommendationOutput = () => {
             <Navbar />
             <div className="outputblock">
                 <div className="inner-container">
-                    <h1>Crop Recommendation Output</h1>
+                    <h1>Crop Recommendations</h1>
+                    
+                    {/* Input Summary */}
+                    <div className="input-summary">
+                        <h2>Soil and Climate Conditions</h2>
+                        <div className="conditions-grid">
+                            {Object.entries(formData).map(([key, value]) => (
+                                <div key={key} className="condition-item">
+                                    <span className="condition-label">
+                                        {key.charAt(0).toUpperCase() + key.slice(1)}:
+                                    </span>
+                                    <span className="condition-value">
+                                        {formatInputValue(key, value)}
+                                    </span>
+                                </div>
+                            ))}
+                            <div className="condition-item">
+                                <span className="condition-label">State:</span>
+                                <span className="condition-value">{selectedState}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Recommendations */}
                     <div className="list-container">
-                        {recommendedCrops.map((crop, index) => (
+                        {recommendations.map((crop, index) => (
                             <div 
-                                className={`crop ${openIndex === index ? 'open' : ''}`} 
+                                className={`crop-card ${openIndex === index ? 'open' : ''}`} 
                                 key={index}
                             >
-                                <div className="name" onClick={() => toggleOpen(index)}>
-                                    <img src={cropIcon} alt="Crop Icon" /> {crop.name}
+                                <div 
+                                    className="crop-header" 
+                                    onClick={() => toggleOpen(index)}
+                                >
+                                    <div className="crop-title">
+                                        <img src={cropIcon} alt="Crop Icon" className="crop-icon" />
+                                        <h3>{crop.name}</h3>
+                                    </div>
+                                    <span className="toggle-icon">
+                                        {openIndex === index ? '−' : '+'}
+                                    </span>
                                 </div>
-                                <div className="data">
-                                    <p><strong>Reason:</strong> {crop.reason}</p>
-                                    <p><strong>Required Fertilizer:</strong> {crop.fertilizer}</p>
-                                    <p><strong>Days to Harvest:</strong> {crop.harvestDays}</p>
+                                <div className="crop-details">
+                                    <div className="detail-group">
+                                        <h4>Why This Crop?</h4>
+                                        <p>{crop.reason}</p>
+                                    </div>
+                                    <div className="detail-group">
+                                        <h4>Recommended Fertilizers</h4>
+                                        <p>{crop.fertilizer}</p>
+                                    </div>
+                                    <div className="detail-group">
+                                        <h4>Time to Harvest</h4>
+                                        <p>{crop.harvestDays}</p>
+                                    </div>
                                 </div>
                             </div>
                         ))}
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="action-buttons">
+                        <button 
+                            className="back-button"
+                            onClick={() => navigate('/crop-recc')}
+                        >
+                            Try Another Analysis
+                        </button>
                     </div>
                 </div>
             </div>
