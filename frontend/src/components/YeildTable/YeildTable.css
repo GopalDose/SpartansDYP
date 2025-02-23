@@ -1,170 +1,170 @@
 .yield {
-    padding: 20px 10%;
-    background: #F9FAFB;
-  }
-  
-  /* Heading and creation date text */
-  .yield h1 {
-    margin-bottom: 10px;
-  }
-  
-  .yield .data {
-    color: #666;
-    margin-bottom: 20px;
-  }
-  
-  /* "+ Add New Entry" button */
-  .newentry {
-    background: var(--second);
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 4px;
-    width: fit-content;
-    margin: 0 auto 20px; /* centers it and adds spacing below */
-    cursor: pointer;
-  }
-  
-  /* Table styling */
-  .table {
-    width: 90%;
-    margin: 0 auto;
-    border-collapse: separate;
-    border-spacing: 0 10px; /* space between rows for a card-like effect */
-  }
-  
-  /* Each "card" row */
-  .data-row {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  /* Table cells */
-  .data-row td {
-    padding: 15px;
-    vertical-align: middle;
-  }
-  
-  /* Icon cell */
-  .icon-cell {
-    width: 50px;
-    text-align: center;
-  }
-  
-  /* Main title text in each row */
-  .main-text {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 5px;
-  }
-  
-  /* Subtitle text in each row */
-  .sub-text {
-    font-size: 14px;
-    color: #666;
-  }
-  
-  /* Time on the right */
-  .time {
-    font-size: 14px;
-    color: #999;
-    text-align: right;
-    width: 70px;
-  }
-  
+  padding: 20px 10%;
+  background: #F9FAFB;
+}
 
-  .dlt-btn{
-    cursor: pointer;
-    font-size: 20px;
-    margin-left: 20px;
-    color: #999;
-    transition: all ease .3s;
-  }
+/* Heading and creation date text */
+.yield h1 {
+  margin-bottom: 10px;
+}
 
-  .dlt-btn:hover{
-    color: red;
-  }
+.yield .data {
+  color: #666;
+  margin-bottom: 20px;
+}
 
-  .popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .popup-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-  }
-  
-  .popup-buttons {
-    margin-top: 20px;
-  }
-  
-  .delete-btn {
-    background: red;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-    margin-right: 10px;
-    border-radius: 4px;
-  }
-  
-  .cancel-btn {
-    background: gray;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-  
-  
-  .completed button{
-    border: none;
-    padding: 10px;
-    background: var(--first);
-    color: white;
-    font-weight: 700;
-    border-radius: 5px;
-  }
-  .back-btn-container {
-    margin-bottom: 10px;
-  }
-  
-  .nav-button {
-    background-color: #4CAF50;
-    color: #fff;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-right: 10px;
-  }
-  
-  .nav-button:hover {
-    background-color: #45a049;
-  }
-  
-  .finance-button {
-    margin-left: 10px;
-  }
-  
+/* "+ Add New Entry" button */
+.newentry {
+  background: var(--second);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 4px;
+  width: fit-content;
+  margin: 0 auto 20px; /* centers it and adds spacing below */
+  cursor: pointer;
+}
 
-  .newentry.audio{
-    background: rgb(0, 191, 255);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-weight: 700;
-  }
+/* Table styling */
+.table {
+  width: 90%;
+  margin: 0 auto;
+  border-collapse: separate;
+  border-spacing: 0 10px; /* space between rows for a card-like effect */
+}
+
+/* Each "card" row */
+.data-row {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Table cells */
+.data-row td {
+  padding: 15px;
+  vertical-align: middle;
+}
+
+/* Icon cell */
+.icon-cell {
+  width: 50px;
+  text-align: center;
+}
+
+/* Main title text in each row */
+.main-text {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+/* Subtitle text in each row */
+.sub-text {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Time on the right */
+.time {
+  font-size: 14px;
+  color: #999;
+  text-align: right;
+  width: 70px;
+}
+
+
+.dlt-btn{
+  cursor: pointer;
+  font-size: 20px;
+  margin-left: 20px;
+  color: #999;
+  transition: all ease .3s;
+}
+
+.dlt-btn:hover{
+  color: red;
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+.popup-buttons {
+  margin-top: 20px;
+}
+
+.delete-btn {
+  background: red;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  margin-right: 10px;
+  border-radius: 4px;
+}
+
+.cancel-btn {
+  background: gray;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+
+.completed button{
+  border: none;
+  padding: 10px;
+  background: var(--first);
+  color: white;
+  font-weight: 700;
+  border-radius: 5px;
+}
+.back-btn-container {
+  margin-bottom: 10px;
+}
+
+.nav-button {
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-right: 10px;
+}
+
+.nav-button:hover {
+  background-color: #45a049;
+}
+
+.finance-button {
+  margin-left: 10px;
+}
+
+
+.newentry.audio{
+  background: rgb(0, 191, 255);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 700;
+}
