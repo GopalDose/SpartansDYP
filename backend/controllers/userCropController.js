@@ -62,9 +62,9 @@ exports.deactivateUserCrop = async(req,res) =>{
   try {
     const {userid} = req.body
     const id = req.params.id
-    const userCrop = await UserCrop.find({userid,id})
+    const userCrop = await UserCrop.find({id,userid})
     if(!userCrop) return res.json({error : "crop not found"}).status(404)
-    userCrop.updateOne({state:!userCrop.state})
+    userCrop.updateOne({state:false})
     res.json(userCrop).status(200)
   } catch (error) {
     res.json({message : "Error occurred could not deactivate user crop",error}).status(500)
