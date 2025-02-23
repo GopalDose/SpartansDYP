@@ -1,17 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import './YeildTable.css';
-import Navbar from '../Navbar/Navbar';
-import Footer from '../Footer/Footer';
-import StatsCards from '../StatsCards/StatsCards';
-import { FaLeaf, FaTree, FaCloudSun, FaSun, FaBug, FaTractor } from 'react-icons/fa';
+import "./YeildTable.css";
+import Navbar from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
+import StatsCards from "../StatsCards/StatsCards";
+import AddTask from "../AddTask/AddTask"; // Re-added this import
+import { FaLeaf, FaTree, FaCloudSun, FaSun, FaBug, FaTractor } from "react-icons/fa";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AddTask from '../AddTask/AddTask';
 import { CiMicrophoneOn } from "react-icons/ci";
 
-const YeildTable = () => {
+// Replace these with your actual Gemini Pro API endpoint and API key
+const GEMINI_API_KEY = "AIzaSyDgsrTya7QBVnWkiZxn5564ZwmVJYMeKX8"; 
+const GEMINI_PRO_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`; 
+const TASKS_API_URL = "http://localhost:4137/api/tasks"; // Your backend tasks endpoint
+
+const YieldTable = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [crop, setCrop] = useState(null);
@@ -21,6 +26,8 @@ const YeildTable = () => {
   const [showForm, setShowForm] = useState(false);
   const [totalExpense, setTotalExpense] = useState(0);
   const [totalTasks, setTotalTasks] = useState(0);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recognition, setRecognition] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
 
   useEffect(() => {
@@ -28,7 +35,6 @@ const YeildTable = () => {
     fetchTasks();
   }, [id]);
 
-  // Fetch crop details
   const fetchCropDetails = async () => {
     try {
       const response = await fetch(`http://localhost:4137/api/usercrop/crops/${id}`);
@@ -42,82 +48,204 @@ const YeildTable = () => {
     }
   };
 
-  // Fetch tasks associated with this crop
   const fetchTasks = async () => {
     try {
       const response = await fetch(`http://localhost:4137/api/tasks/t/${id}`);
       if (!response.ok) throw new Error("Failed to fetch tasks");
       const data = await response.json();
-
       setTasks(data);
       setTotalTasks(data.length);
-
-      // Calculate total expense
-      const totalCost = data.reduce((sum, task) => sum + (task.price || 0), 0);
-      setTotalExpense(totalCost);
+      setTotalExpense(data.reduce((sum, task) => sum + (task.price || 0), 0));
     } catch (error) {
       toast.error("Error fetching tasks");
     }
   };
 
-  // Function to delete a task
+  // Delete a task
   const handleDeleteTask = async () => {
     if (!selectedTask) return;
-
     try {
       const response = await fetch(`http://localhost:4137/api/tasks/${selectedTask._id}`, {
         method: "DELETE",
       });
-
       if (!response.ok) throw new Error("Failed to delete task");
-
       toast.success("Task deleted successfully!");
       setSelectedTask(null);
-      fetchTasks(); // Refresh tasks list
+      fetchTasks();
     } catch (error) {
       toast.error("Error deleting task");
     }
   };
 
+  // Delete a yield
   const handleDeleteYield = async () => {
+    if (!window.confirm("Are you sure you want to delete this yield?")) return;
     try {
       const response = await fetch(`http://localhost:4137/api/usercrop/${id}`, {
         method: "DELETE",
       });
-
-      if (!response.ok) throw new Error("Failed to delete crop");
-
-      toast.success("Crop deleted successfully!");
-      navigate("/dashboard"); // Redirect to dashboard after successful deletion
+      if (!response.ok) throw new Error("Failed to delete yield");
+      toast.success("Yield deleted successfully!");
+      navigate("/dashboard");
     } catch (error) {
-      toast.error("Error deleting crop");
+      toast.error("Error deleting yield");
     }
   };
 
+  // Mark yield as completed
   const handleCompleteYield = async () => {
-    const userId = localStorage.getItem("userId"); // Retrieve userId from localStorage
-
+    const userId = localStorage.getItem("userId");
     if (!userId) {
       toast.error("User not found. Please log in again.");
       return;
     }
-
     try {
       const response = await fetch(`http://localhost:4137/api/usercrop/deactivate/${id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId }), // Send userId in request body
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
       });
-
-      if (!response.ok) throw new Error("Failed to complete crop");
-
-      toast.success("Crop marked as completed!");
+      if (!response.ok) throw new Error("Failed to mark yield as completed");
+      toast.success("Yield marked as completed!");
       fetchCropDetails();
     } catch (error) {
-      toast.error("Error completing crop");
+      toast.error("Error completing yield");
     }
+  };
+
+  // Process the speech transcript by calling Gemini Pro API directly
+ // Process the speech transcript by calling Gemini Pro API directly
+ const handleSpeechTranscript = async (transcript) => {
+  try {
+    console.log("Sending transcript to Gemini Pro API:", transcript);
+
+    // Construct payload according to Gemini Pro API format
+    const geminiPayload = {
+      contents: [{
+        parts: [{
+          text: `Parse this agricultural task description and extract the following fields:
+                 type (must be one of: Sowing, Fertilizer, Irrigation, Harvesting, Pesticides, Cultivation),
+                 name (a descriptive name for the task),
+                 summary (detailed explanation),
+                 price (numerical value if mentioned),
+                 quantity (numerical value if mentioned),
+                 companyname (if any company or brand is mentioned).
+                 
+                 Task description: ${transcript}`
+        }]
+      }]
+    };
+
+    // Call Gemini Pro API
+    const geminiResponse = await fetch(GEMINI_PRO_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(geminiPayload)
+    });
+
+    if (!geminiResponse.ok) {
+      const errorData = await geminiResponse.json();
+      console.error("Gemini Pro API error details:", errorData);
+      throw new Error("Gemini Pro API error");
+    }
+
+    const geminiData = await geminiResponse.json();
+    console.log("Raw Gemini Response:", geminiData);
+
+    // Extract the response text
+    const responseText = geminiData.candidates[0].content.parts[0].text;
+    
+    // Parse the response text into structured data matching the Mongoose model
+    const parsedData = {
+      type: responseText.match(/type:\s*(\w+)/i)?.[1] || "Cultivation",
+      name: responseText.match(/name:\s*([^\n]+)/i)?.[1] || "Untitled Task",
+      summary: responseText.match(/summary:\s*([^\n]+)/i)?.[1] || transcript,
+      price: parseFloat(responseText.match(/price:\s*(\d+)/i)?.[1]) || 0,
+      quantity: parseFloat(responseText.match(/quantity:\s*(\d+)/i)?.[1]) || 1,
+      companyname: responseText.match(/companyname:\s*([^\n]+)/i)?.[1] || ""
+    };
+
+    // Build the payload matching your Mongoose model exactly
+    const taskPayload = {
+      ...parsedData,
+      cropid: id  // Using the cropid from params
+    };
+
+    // Log the task payload for debugging
+    console.log("Sending task payload to backend:", taskPayload);
+
+    // Send to your backend
+    const taskResponse = await fetch(`${TASKS_API_URL + '/'+id}`, {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(taskPayload)
+    });
+
+    if (!taskResponse.ok) {
+      const errorData = await taskResponse.text();
+      console.error("Backend error details:", errorData);
+      throw new Error("Failed to add task from speech");
+    }
+    
+    toast.success("Task added via speech!");
+    fetchTasks();
+  } catch (error) {
+    console.error("Error processing speech task:", error);
+    toast.error("Failed to add task from speech. Please try again.");
+  }
+};
+
+
+  
+
+  // Setup Speech Recognition
+  useEffect(() => {
+    if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
+      toast.error("Your browser does not support Speech Recognition.");
+      return;
+    }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognitionInstance = new SpeechRecognition();
+    recognitionInstance.continuous = false;
+    recognitionInstance.interimResults = false;
+    recognitionInstance.lang = "en-US";
+
+    recognitionInstance.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      console.log("Recognized Text:", transcript);
+      // Directly process the transcript with Gemini Pro API
+      handleSpeechTranscript(transcript);
+    };
+
+    recognitionInstance.onerror = (event) => {
+      console.error("Speech Recognition Error:", event.error);
+      toast.error("Speech recognition error. Try again.");
+      setIsRecording(false);
+    };
+
+    recognitionInstance.onend = () => {
+      setIsRecording(false);
+    };
+
+    setRecognition(recognitionInstance);
+  }, []);
+
+  const toggleRecording = () => {
+    if (!recognition) {
+      toast.error("Speech recognition not available.");
+      return;
+    }
+    if (isRecording) {
+      recognition.stop();
+    } else {
+      recognition.start();
+      toast.info("Recording started. Speak now...");
+    }
+    setIsRecording(!isRecording);
   };
 
   return (
@@ -125,14 +253,13 @@ const YeildTable = () => {
       <Navbar />
       <ToastContainer />
 
-      <div className="yeild">
+      <div className="yield">
         {loading ? (
           <p>Loading crop details...</p>
         ) : error ? (
           <p>Error: {error}</p>
         ) : (
           <>
-            {/* Back Button above the name */}
             <div className="back-btn-container">
               <button className="nav-button" onClick={() => navigate("/dashboard")}>
                 Back
@@ -141,33 +268,31 @@ const YeildTable = () => {
 
             <h1>
               {crop?.name}
-              <RiDeleteBin7Fill onClick={() => handleDeleteYield()} className='dlt-btn' />
-              <div className="completed">
-                {crop.state ? (
-                  <>
-                    <button onClick={handleCompleteYield}>Completed</button>
-                    <button className="nav-button finance-button" onClick={() => navigate(`/finance/${id}`)}>
-                      Financial Planning
-                    </button>
-                  </>
-                ) : ''}
-              </div>
+              <RiDeleteBin7Fill onClick={handleDeleteYield} className="dlt-btn" />
+              {crop.state && (
+                <div className="completed">
+                  <button onClick={handleCompleteYield}>Completed</button>
+                  <button className="nav-button finance-button" onClick={() => navigate(`/finance/${id}`)}>
+                    Financial Planning
+                  </button>
+                </div>
+              )}
             </h1>
             <div className="data">Created Date: {new Date(crop?.createdAt).toLocaleDateString()}</div>
 
             <StatsCards totalTasks={totalTasks} totalExpense={totalExpense} status={crop.state} />
 
-            {crop.state ? (
+            {crop.state && (
               <>
                 <div className="newentry" onClick={() => setShowForm(true)} style={{ cursor: "pointer" }}>
                   + Add New Entry
                 </div>
-                {/* <div className="newentry audio"  style={{ cursor: "pointer" }}>
-                <CiMicrophoneOn />
-                Audio Input
-                </div> */}
+                <div className="newentry audio" onClick={toggleRecording} style={{ cursor: "pointer" }}>
+                  <CiMicrophoneOn size={24} />
+                  {isRecording ? " Stop Recording" : " Start Recording"}
+                </div>
               </>
-            ) : ''}
+            )}
 
             <table className="table">
               <tbody>
@@ -200,7 +325,7 @@ const YeildTable = () => {
         )}
       </div>
 
-      {/* Show AddTask form */}
+      {/* Show AddTask form if needed */}
       {showForm && <AddTask close={() => setShowForm(false)} refreshTasks={fetchTasks} />}
 
       {/* Popup for task deletion */}
@@ -208,10 +333,16 @@ const YeildTable = () => {
         <div className="popup">
           <div className="popup-content">
             <h3>Delete Task?</h3>
-            <p>Are you sure you want to delete <b>{selectedTask.name}</b>?</p>
+            <p>
+              Are you sure you want to delete <b>{selectedTask.name}</b>?
+            </p>
             <div className="popup-buttons">
-              <button onClick={handleDeleteTask} className="delete-btn">Delete</button>
-              <button onClick={() => setSelectedTask(null)} className="cancel-btn">Cancel</button>
+              <button onClick={handleDeleteTask} className="delete-btn">
+                Delete
+              </button>
+              <button onClick={() => setSelectedTask(null)} className="cancel-btn">
+                Cancel
+              </button>
             </div>
           </div>
         </div>
@@ -222,4 +353,4 @@ const YeildTable = () => {
   );
 };
 
-export default YeildTable;
+export default YieldTable;
