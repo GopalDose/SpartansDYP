@@ -1,14 +1,14 @@
-.yeild {
+.yield {
     padding: 20px 10%;
     background: #F9FAFB;
   }
   
   /* Heading and creation date text */
-  .yeild h1 {
+  .yield h1 {
     margin-bottom: 10px;
   }
   
-  .yeild .data {
+  .yield .data {
     color: #666;
     margin-bottom: 20px;
   }
