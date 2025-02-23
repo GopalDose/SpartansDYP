@@ -3,61 +3,96 @@ import { useNavigate, useParams } from "react-router-dom";
 import './YeildTable.css';
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
-import StatsCards from '../StatsCards/StatsCards'; 
-import { FaLeaf, FaTree, FaCloudSun, FaSun } from 'react-icons/fa';
+import StatsCards from '../StatsCards/StatsCards';
+import { FaLeaf, FaTree, FaCloudSun, FaSun, FaBug, FaTractor  } from 'react-icons/fa';
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AddTask from '../AddTask/AddTask';
 
 const YeildTable = () => {
-  const { id } = useParams(); // Get the crop ID from URL
+  const { id } = useParams();
   const navigate = useNavigate();
   const [crop, setCrop] = useState(null);
+  const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [totalExpense, setTotalExpense] = useState(0);
+  const [totalTasks, setTotalTasks] = useState(0);
+  const [selectedTask, setSelectedTask] = useState(null);
 
-  // Fetch crop details from backend
   useEffect(() => {
-    const fetchCropDetails = async () => {
-      try {
-        const response = await fetch(`http://localhost:4137/api/usercrop/crops/${id}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch crop details");
-        }
-        const data = await response.json();
-        setCrop(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchCropDetails();
+    fetchTasks();
   }, [id]);
 
-  // Function to delete the crop
-  const handleDelete = async () => {
-    if (!window.confirm("Are you sure you want to delete this crop?")) return;
+  // Fetch crop details
+  const fetchCropDetails = async () => {
+    try {
+      const response = await fetch(`http://localhost:4137/api/usercrop/crops/${id}`);
+      if (!response.ok) throw new Error("Failed to fetch crop details");
+      const data = await response.json();
+      setCrop(data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  // Fetch tasks associated with this crop
+  const fetchTasks = async () => {
+    try {
+      const response = await fetch(`http://localhost:4137/api/tasks/t/${id}`);
+      if (!response.ok) throw new Error("Failed to fetch tasks");
+      const data = await response.json();
+
+      setTasks(data);
+      setTotalTasks(data.length);
+
+      // Calculate total expense
+      const totalCost = data.reduce((sum, task) => sum + (task.price || 0), 0);
+      setTotalExpense(totalCost);
+    } catch (error) {
+      toast.error("Error fetching tasks");
+    }
+  };
+
+  // Function to delete a task
+  const handleDeleteTask = async () => {
+    if (!selectedTask) return;
+
+    try {
+      const response = await fetch(`http://localhost:4137/api/tasks/${selectedTask._id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) throw new Error("Failed to delete task");
+
+      toast.success("Task deleted successfully!");
+      setSelectedTask(null);
+      fetchTasks(); // Refresh tasks list
+    } catch (error) {
+      toast.error("Error deleting task");
+    }
+  };
+
+  const handleDeleteYield = async () => {
     try {
       const response = await fetch(`http://localhost:4137/api/usercrop/${id}`, {
         method: "DELETE",
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete crop");
-      }
-
+  
+      if (!response.ok) throw new Error("Failed to delete crop");
+  
       toast.success("Crop deleted successfully!");
-
-      setTimeout(() => {
-        navigate("/dashboard"); // Navigate back to dashboard after deletion
-      }, 1500);
+      navigate("/dashboard"); // Redirect to dashboard after successful deletion
     } catch (error) {
       toast.error("Error deleting crop");
     }
   };
+  
 
   return (
     <>
@@ -71,67 +106,65 @@ const YeildTable = () => {
         ) : (
           <>
             <h1>
-              {crop?.name} 
-              <RiDeleteBin7Fill 
-                onClick={handleDelete} 
-                className='dlt-btn' 
-              />
+              {crop?.name}
+              <RiDeleteBin7Fill onClick={() => handleDeleteYield()} className='dlt-btn' />
             </h1>
             <div className="data">Created Date: {new Date(crop?.createdAt).toLocaleDateString()}</div>
-            <StatsCards /> 
+            
+            <StatsCards totalTasks={totalTasks} totalExpense={totalExpense} />
 
-            <div className="newentry">+ Add New Entry</div>
+            <div className="newentry" onClick={() => setShowForm(true)} style={{ cursor: "pointer" }}>
+              + Add New Entry
+            </div>
 
             <table className="table">
               <tbody>
-                <tr className="data-row">
-                  <td className="icon-cell">
-                    <FaLeaf size={24} color="#4CAF50" />
-                  </td>
-                  <td>
-                    <div className="main-text">Sowing</div>
-                    <div className="sub-text">Wheat seeds planted in Field A</div>
-                  </td>
-                  <td className="time">2h ago</td>
-                </tr>
-
-                <tr className="data-row">
-                  <td className="icon-cell">
-                    <FaTree size={24} color="#4CAF50" />
-                  </td>
-                  <td>
-                    <div className="main-text">Fertilization</div>
-                    <div className="sub-text">Applied organic fertilizer to Field B</div>
-                  </td>
-                  <td className="time">5h ago</td>
-                </tr>
-
-                <tr className="data-row">
-                  <td className="icon-cell">
-                    <FaCloudSun size={24} color="#2196F3" />
-                  </td>
-                  <td>
-                    <div className="main-text">Irrigation</div>
-                    <div className="sub-text">Scheduled irrigation for Field C</div>
-                  </td>
-                  <td className="time">1d ago</td>
-                </tr>
-
-                <tr className="data-row">
-                  <td className="icon-cell">
-                    <FaSun size={24} color="#FFC107" />
-                  </td>
-                  <td>
-                    <div className="main-text">Harvesting</div>
-                    <div className="sub-text">Harvested crops from Field D</div>
-                  </td>
-                  <td className="time">3d ago</td>
-                </tr>
+                {tasks.length > 0 ? (
+                  tasks.map((task) => (
+                    <tr key={task._id} className="data-row" onClick={() => setSelectedTask(task)}>
+                      <td className="icon-cell">
+                        {task.type === "Sowing" && <FaLeaf size={24} color="#4CAF50" />}
+                        {task.type === "Fertilizer" && <FaTree size={24} color="#4CAF50" />}
+                        {task.type === "Irrigation" && <FaCloudSun size={24} color="#2196F3" />}
+                        {task.type === "Harvesting" && <FaSun size={24} color="#FFC107" />}
+                        {task.type === "Pesticides" && <FaBug size={24} color="#FF5722" />}
+                        {task.type === "Cultivation" && <FaTractor size={24} color="#8B4513" />}
+                      </td>
+                      <td>
+                        <div className="main-text">{task.type}</div>
+                        <div className="sub-text">{task.name}</div>
+                      </td>
+                      <td className="time">{new Date(task.createdAt).toLocaleString()}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3">No tasks added yet.</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </>
         )}
       </div>
+
+      {/* Show AddTask form */}
+      {showForm && <AddTask close={() => setShowForm(false)} refreshTasks={fetchTasks} />}
+
+      {/* Popup for task deletion */}
+      {selectedTask && (
+        <div className="popup">
+          <div className="popup-content">
+            <h3>Delete Task?</h3>
+            <p>Are you sure you want to delete <b>{selectedTask.name}</b>?</p>
+            <div className="popup-buttons">
+              <button onClick={handleDeleteTask} className="delete-btn">Delete</button>
+              <button onClick={() => setSelectedTask(null)} className="cancel-btn">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </>
   );

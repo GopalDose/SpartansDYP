@@ -24,6 +24,7 @@ header nav ul {
     display: flex;
     gap: 1.5rem;
     align-items: center;
+    margin-top: 10px;
 }
 
 header nav a {
@@ -77,4 +78,8 @@ header nav a {
 /* Hide Google Translate attribution */
 .goog-te-gadget span:not(.goog-te-menu-value) {
     display: none !important;
+}
+
+header .icon{
+    font-size: 2rem;
 }

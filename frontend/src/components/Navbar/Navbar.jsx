@@ -46,62 +46,20 @@ const Navbar = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [siteTitle, setSiteTitle] = useState('ShetNiyojan');
 
-  const languages = [
-    { code: 'en', name: 'English', title: 'ShetNiyojan' },
-    { code: 'hi', name: 'हिंदी', title: 'शेतनियोजन' },
-    { code: 'mr', name: 'मराठी', title: 'शेतनियोजन' },
-    { code: 'gu', name: 'ગુજરાતી', title: 'ખેતનિયોજન' }
-  ];
-
-  const handleLanguageChange = (language) => {
-    setSelectedLanguage(language.name);
-    setSiteTitle(language.title);
-    setIsLanguageOpen(false);
-  };
-
   return (
     <header className="navbar">
       <div className="logo">
         <img src={logo} alt="Logo" />
         <span>{siteTitle}</span>
       </div>
-      
+
       <nav className="links">
         <ul>
           <li>
-            <a href="#"><IoMdHome /></a>
+            <a href="#"><IoMdHome className='icon' /></a>
           </li>
           <li>
-            <a href="#"><FaUser /></a>
-          </li>
-          <li className="translate-wrapper">
-            <div className="language-selector">
-              <Globe size={30} />
-              <button 
-                onClick={() => setIsLanguageOpen(!isLanguageOpen)} 
-                className="lang-button"
-              >
-                {selectedLanguage}
-                <ChevronDown 
-                  size={16} 
-                  className={isLanguageOpen ? 'chevron rotate' : 'chevron'} 
-                />
-              </button>
-
-              {isLanguageOpen && (
-                <div className="language-dropdown">
-                  {languages.map((lang) => (
-                    <button
-                      key={lang.code}
-                      className="lang-option"
-                      onClick={() => handleLanguageChange(lang)}
-                    >
-                      {lang.name}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            <a href="#"><FaUser className='icon' /></a>
           </li>
         </ul>
       </nav>
@@ -137,6 +95,7 @@ const Navbar = () => {
           list-style: none;
           margin: 0;
           padding: 0;
+          margin-top: 1rem;
         }
 
         .links a {
@@ -145,6 +104,7 @@ const Navbar = () => {
           text-decoration: none;
           display: flex;
           align-items: center;
+          font-size: 1.25rem;
         }
 
         .links a:hover {
@@ -203,11 +163,6 @@ const Navbar = () => {
           color: #374151;
           font-size: 14px;
         }
-
-        .lang-option:hover {
-          background-color: #F3F4F6;
-        }
-
         @media (max-width: 768px) {
           .navbar {
             padding: 0.5rem 1rem;
