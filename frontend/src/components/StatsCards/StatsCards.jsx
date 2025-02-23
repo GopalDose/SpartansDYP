@@ -2,13 +2,15 @@ import React from "react";
 import { FaLeaf, FaDollarSign, FaCalendarCheck, FaTractor } from "react-icons/fa";
 import "./StatsCards.css";
 
-const StatsCards = ({ totalTasks, totalExpense }) => {
+const StatsCards = ({ totalTasks, totalExpense, status }) => {
   const stats = [
     { title: "Days remain", value: "12", subtitle: "Active cultivation", icon: <FaLeaf size={20} color="green" /> },
     { title: "Expense", value: totalExpense, subtitle: "This Yield", icon: <FaDollarSign size={20} color="purple" /> },
     { title: "Activities", value: totalTasks, subtitle: "This Yield", icon: <FaCalendarCheck size={20} color="green" /> },
-    { title: "Equipment", value: "8", subtitle: "In operation", icon: <FaTractor size={20} color="purple" /> }
+    { title: "Status", value: status ? "Active" : "Inactive", subtitle: "Yield", icon: <FaTractor size={20} color="purple" /> }
   ];
+
+  console.log(totalTasks, totalExpense, status);
 
   return (
     <div className="stats-container">

@@ -4,7 +4,7 @@ import './YeildTable.css';
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
 import StatsCards from '../StatsCards/StatsCards';
-import { FaLeaf, FaTree, FaCloudSun, FaSun, FaBug, FaTractor  } from 'react-icons/fa';
+import { FaLeaf, FaTree, FaCloudSun, FaSun, FaBug, FaTractor } from 'react-icons/fa';
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -83,16 +83,42 @@ const YeildTable = () => {
       const response = await fetch(`http://localhost:4137/api/usercrop/${id}`, {
         method: "DELETE",
       });
-  
+
       if (!response.ok) throw new Error("Failed to delete crop");
-  
+
       toast.success("Crop deleted successfully!");
       navigate("/dashboard"); // Redirect to dashboard after successful deletion
     } catch (error) {
       toast.error("Error deleting crop");
     }
   };
-  
+
+  const handleCompleteYield = async () => {
+    const userId = localStorage.getItem("userId"); // Retrieve userId from localStorage
+
+    if (!userId) {
+      toast.error("User not found. Please log in again.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:4137/api/usercrop/deactivate/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }), // Send userId in request body
+      });
+
+      if (!response.ok) throw new Error("Failed to complete crop");
+
+      toast.success("Crop marked as completed!");
+      fetchCropDetails(); // Refresh data after marking as complete
+    } catch (error) {
+      toast.error("Error completing crop");
+    }
+  };
+
 
   return (
     <>
@@ -108,10 +134,13 @@ const YeildTable = () => {
             <h1>
               {crop?.name}
               <RiDeleteBin7Fill onClick={() => handleDeleteYield()} className='dlt-btn' />
+              <div className="completed">
+                <button onClick={handleCompleteYield}>Completed</button>
+              </div>
             </h1>
             <div className="data">Created Date: {new Date(crop?.createdAt).toLocaleDateString()}</div>
-            
-            <StatsCards totalTasks={totalTasks} totalExpense={totalExpense} />
+
+            <StatsCards totalTasks={totalTasks} totalExpense={totalExpense} status={crop.state} />
 
             <div className="newentry" onClick={() => setShowForm(true)} style={{ cursor: "pointer" }}>
               + Add New Entry
