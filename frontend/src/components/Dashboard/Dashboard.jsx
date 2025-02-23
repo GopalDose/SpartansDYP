@@ -100,6 +100,13 @@ const Dashboard = () => {
                                 <p>AI-powered insights for optimal crop selection and yield forecasting</p>
                             </div>
                         </Link>
+                        <Link to="/finance">
+                            <div className="services-card">
+                                <PiPlant className="icon" />
+                                <div className="service__title">Financial Analytics</div>
+                                <p>AI-powered insights for optimal crop selection and yield forecasting</p>
+                            </div>
+                        </Link>
 
                     </div>
                 </div>

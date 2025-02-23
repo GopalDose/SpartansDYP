@@ -16,6 +16,7 @@ import { useParams } from "react-router-dom";
 import { useTranslation } from './contexts/TranslationContext';
 import PrevYield from './components/PrevYield/PrevYield';
 import FinancialPlanning from './components/FinancialPlanning/FinancialPlanning';
+import Finance from './components/Finance/Finance';
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -60,6 +61,7 @@ const App = () => {
             <Route path="/yield/:id" element={<YeildTable />} />
             <Route path="/prevyield" element={<PrevYield />} />
             <Route path="/finance/:id" element={<FinancialPlanning />} />
+            <Route path="/finance" element={<Finance />} />
           </Routes>
 
           <div className="chatbot">
