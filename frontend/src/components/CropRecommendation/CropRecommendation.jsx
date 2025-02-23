@@ -30,63 +30,95 @@ function CropRecommendation() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Mock recommendations based on input values
-  const generateMockRecommendations = (data, state) => {
-    // Basic logic to determine crops based on input values
-    const recommendations = [];
-    
-    // Check for rice conditions
-    if (data.rainfall > 100 && data.temperature > 20 && data.humidity > 60) {
-      recommendations.push({
-        name: "Rice",
-        reason: `High rainfall (${data.rainfall}cm) and humidity (${data.humidity}%) make ideal conditions for rice cultivation. The temperature of ${data.temperature}°C is within optimal range.`,
-        fertilizer: "Urea, DAP, Potash",
-        harvestDays: "120-150 days"
-      });
+  // Function to extract JSON from the response text
+  const extractJSONFromText = (text) => {
+    try {
+      // Try to parse the entire text first
+      return JSON.parse(text);
+    } catch (e) {
+      try {
+        // If that fails, try to extract JSON array using regex
+        const jsonMatch = text.match(/\[[\s\S]*\]/);
+        if (jsonMatch) {
+          return JSON.parse(jsonMatch[0]);
+        }
+        throw new Error('No valid JSON array found in response');
+      } catch (error) {
+        console.error('Failed to parse response:', text);
+        throw new Error('Failed to parse recommendations');
+      }
     }
-
-    // Check for wheat conditions
-    if (data.temperature < 30 && data.ph >= 6.0 && data.ph <= 7.5) {
-      recommendations.push({
-        name: "Wheat",
-        reason: `Moderate temperature (${data.temperature}°C) and optimal pH (${data.ph}) are suitable for wheat. The nitrogen level of ${data.nitrogen} mg/kg supports good growth.`,
-        fertilizer: "NPK 20-20-20, Urea",
-        harvestDays: "100-150 days"
-      });
-    }
-
-    // Check for cotton conditions
-    if (data.temperature > 25 && data.ph >= 5.5 && data.ph <= 8.5) {
-      recommendations.push({
-        name: "Cotton",
-        reason: `Well-draining soil with pH ${data.ph} and warm temperature of ${data.temperature}°C provide good conditions for cotton. Potassium level of ${data.potassium} mg/kg supports fiber development.`,
-        fertilizer: "NPK 15-15-15, DAP",
-        harvestDays: "150-180 days"
-      });
-    }
-
-    // Add pulses as a backup option
-    if (recommendations.length < 3) {
-      recommendations.push({
-        name: "Green Gram (Moong)",
-        reason: `Moderate nutrient requirements make it suitable for most conditions. Current nitrogen (${data.nitrogen} mg/kg) and pH (${data.ph}) levels are acceptable.`,
-        fertilizer: "DAP, Single Super Phosphate",
-        harvestDays: "60-65 days"
-      });
-    }
-
-    // Ensure we have exactly 3 recommendations
-    return recommendations.slice(0, 3);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+
     try {
-      // Instead of making the API call, use our local recommendation generator
-      const recommendations = generateMockRecommendations(formData, selectedState);
+      const apiKey = 'AIzaSyDgsrTya7QBVnWkiZxn5564ZwmVJYMeKX8';
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+
+      const prompt = {
+        contents: [{
+          parts: [{
+            text: `Act as an agricultural expert and analyze these soil and climate parameters to recommend suitable crops. Return ONLY a JSON array with no markdown formatting or additional text.
+
+Parameters:
+- Potassium: ${formData.potassium} mg/kg
+- Nitrogen: ${formData.nitrogen} mg/kg
+- Sodium: ${formData.sodium} mg/kg
+- pH: ${formData.ph}
+- Temperature: ${formData.temperature}°C
+- Annual Rainfall: ${formData.rainfall} cm/year
+- Humidity: ${formData.humidity}%
+- State: ${selectedState}
+
+Return a JSON array of 3 most suitable crops in this exact format:
+[
+  {
+    "name": "crop name",
+    "reason": "scientific explanation of suitability based on given parameters",
+    "fertilizer": "recommended fertilizers",
+    "harvestDays": "time to harvest"
+  }
+]`
+          }]
+        }]
+      };
+
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contents: prompt.contents,
+          generationConfig: {
+            temperature: 0.7,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 1024,
+          }
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get recommendations from API');
+      }
+
+      const result = await response.json();
       
-      // Navigate with the recommendations
+      if (!result.candidates?.[0]?.content?.parts?.[0]?.text) {
+        throw new Error('Invalid API response format');
+      }
+
+      const textResponse = result.candidates[0].content.parts[0].text;
+      const recommendations = extractJSONFromText(textResponse);
+
+      if (!Array.isArray(recommendations) || recommendations.length === 0) {
+        throw new Error('Invalid recommendations format received');
+      }
+
       navigate("/crop-recc-out", { 
         state: { 
           recommendations,
@@ -95,8 +127,8 @@ function CropRecommendation() {
         }
       });
     } catch (error) {
-      alert("Failed to generate recommendations. Please try again.");
       console.error("Error:", error);
+      alert(error.message || "Failed to generate recommendations. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -167,9 +199,10 @@ function CropRecommendation() {
           <input 
             type="number" 
             name="ph" 
-            min={0} 
+            min={0}
+            max={14}
             step="0.1" 
-            placeholder="pH" 
+            placeholder="pH (0-14)" 
             required 
             onChange={handleChange}
             value={formData.ph} 
@@ -177,7 +210,8 @@ function CropRecommendation() {
           <input 
             type="number" 
             name="humidity" 
-            min={0} 
+            min={0}
+            max={100}
             placeholder="Humidity (%)" 
             required 
             onChange={handleChange}
@@ -189,7 +223,7 @@ function CropRecommendation() {
             className="submitbtn"
             disabled={isLoading}
           >
-            <span>{isLoading ? 'Processing...' : 'Get Recommendations'}</span>
+            <span>{isLoading ? 'Getting Recommendations...' : 'Get Recommendations'}</span>
           </button>
         </div>
       </div>
