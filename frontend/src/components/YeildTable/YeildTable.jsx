@@ -9,6 +9,7 @@ import { RiDeleteBin7Fill } from "react-icons/ri";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddTask from '../AddTask/AddTask';
+import { CiMicrophoneOn } from "react-icons/ci";
 
 const YeildTable = () => {
   const { id } = useParams();
@@ -113,7 +114,7 @@ const YeildTable = () => {
       if (!response.ok) throw new Error("Failed to complete crop");
 
       toast.success("Crop marked as completed!");
-      fetchCropDetails(); 
+      fetchCropDetails();
     } catch (error) {
       toast.error("Error completing crop");
     }
@@ -157,9 +158,15 @@ const YeildTable = () => {
             <StatsCards totalTasks={totalTasks} totalExpense={totalExpense} status={crop.state} />
 
             {crop.state ? (
-              <div className="newentry" onClick={() => setShowForm(true)} style={{ cursor: "pointer" }}>
-                + Add New Entry
-              </div>
+              <>
+                <div className="newentry" onClick={() => setShowForm(true)} style={{ cursor: "pointer" }}>
+                  + Add New Entry
+                </div>
+                {/* <div className="newentry audio"  style={{ cursor: "pointer" }}>
+                <CiMicrophoneOn />
+                Audio Input
+                </div> */}
+              </>
             ) : ''}
 
             <table className="table">
