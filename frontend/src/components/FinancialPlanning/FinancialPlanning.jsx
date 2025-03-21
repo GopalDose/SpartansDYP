@@ -45,10 +45,10 @@ const FinancialPlanning = () => {
   const [sowingDate, setSowingDate] = useState(null);
   const [currentStage, setCurrentStage] = useState(null);
   const [predictionError, setPredictionError] = useState(null);
-  const GROQ_API_KEY = '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';
+  const GROQ_API_KEY = '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';
   const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-  const GEMINI_API_KEY = 'AIzaSyDgsrTya7QBVnWkiZxn5564ZwmVJYMeKX8'; // Replace with your API key
-  const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+  const GEMINI_API_KEY = import.meta.env.VITE_API_KEY // Replace with your API key
+  const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
   useEffect(() => {
     fetchTasks();
@@ -190,7 +190,7 @@ const FinancialPlanning = () => {
       const messages = [
         {
           role: "system",
-          content: "You are a financial analysis expert specializing in agricultural expense predictions. Analyze the provided data and generate detailed expense predictions."
+          content: "You are a financial analysis expert specializing in agricultural expense predictions. Analyze the provided data and generate detailed expense predictions. and give only output dont add anything like json or something like that"
         },
         {
           role: "user",
@@ -229,7 +229,7 @@ const FinancialPlanning = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: "mixtral-8x7b-32768",
+          model: "llama-3.3-70b-versatile",
           messages: messages,
           temperature: 0.7,
           max_tokens: 2000
@@ -239,6 +239,7 @@ const FinancialPlanning = () => {
       if (!response.ok) throw new Error('Groq API request failed');
 
       const data = await response.json();
+
       return JSON.parse(data.choices[0].message.content.trim());
     } catch (error) {
       console.error('Groq prediction error:', error);
@@ -303,7 +304,15 @@ const FinancialPlanning = () => {
     try {
       const historicalData = prepareHistoricalData();
       const currentPredictions = predictions;
-
+      console.log('historical data : ');
+      console.log(historicalData);
+      console.log(currentPredictions)
+      console.log(currentStage);
+      
+      ;
+      
+      
+      
       const prompt = {
         contents: [{
           parts: [{
@@ -326,21 +335,34 @@ const FinancialPlanning = () => {
                      rationale: string,
                      estimatedSavings: string,
                      implementationTime: string
-                   }`
+                   }
+                   and only give the dara in json formatted way dont write 'json' like this in output  
+                   `
           }]
         }]
       };
+      console.log(prompt);
 
       const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(prompt)
       });
+      
+      console.log(typeof(response));
+      console.log(response);
+      
+      
+      
 
       if (!response.ok) throw new Error('Failed to generate suggestions');
 
       const data = await response.json();
-      return JSON.parse(data.candidates[0].content.parts[0].text);
+      const resp = data.candidates[0].content.parts[0].text.slice(7);
+      const formatted = resp.replace('```','');
+      
+      
+      return JSON.parse(formatted);
     } catch (error) {
       console.error('Error generating suggestions:', error);
       throw error;
@@ -355,6 +377,8 @@ const FinancialPlanning = () => {
         setPredictionError(null);
         // Use Groq for expense predictions
         const groqPredictions = await fetchGroqPredictions();
+        console.log(groqPredictions);
+        
         setPredictions(groqPredictions);
       } catch (error) {
         console.warn('Falling back to baseline predictions:', error);

@@ -32,6 +32,7 @@ const AddCrop = ({ close, showToast }) => {
             if (response.ok) {
                 showToast("Crop added successfully!", "success");
                 close();
+                setTimeout(()=>window.location.reload(),200);
             } else {
                 showToast(data.message || "Failed to add crop.", "error");
             }

@@ -17,6 +17,7 @@ import { useTranslation } from './contexts/TranslationContext';
 import PrevYield from './components/PrevYield/PrevYield';
 import FinancialPlanning from './components/FinancialPlanning/FinancialPlanning';
 import Finance from './components/Finance/Finance';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -51,8 +52,12 @@ const App = () => {
 
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/register" element={<Registration />} /> 
+            <Route 
+        path="/dashboard" 
+        element={
+          <ProtectedRoute>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/register" element={<Registration />} />
             <Route path="/crop-recc" element={<CropRecommendation />} />
             <Route path="/crop-recc-out" element={<CropRecommendationOutput />} />
             <Route path="/price" element={<FuturePrice />} />
@@ -60,6 +65,8 @@ const App = () => {
             <Route path="/prevyield" element={<PrevYield />} />
             <Route path="/finance/:id" element={<FinancialPlanning />} />
             <Route path="/finance" element={<Finance />} />
+            </ProtectedRoute>
+        }/>
           </Routes>
 
           {/* Chatbot component */}

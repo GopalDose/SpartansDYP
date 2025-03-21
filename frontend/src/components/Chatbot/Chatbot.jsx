@@ -5,6 +5,7 @@ import "./Chatbot.css";
 
 const Chatbot = () => {
   const [open, setOpen] = useState(false);
+  const apiKey  = import.meta.env.VITE_API_KEY
   const [messages, setMessages] = useState([
     { text: "Hello! I am your Agriculture Specialist. Ask me anything about farming, crops, soil, or weather. Be concise", sender: "bot" }
   ]);
@@ -23,7 +24,8 @@ const Chatbot = () => {
   
     try {
       const response = await axios.post(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyAnSh2zOCFrYd3yh_eD7Jf8frFgJLcSXtY`,
+        
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
         {
           contents: [
             {

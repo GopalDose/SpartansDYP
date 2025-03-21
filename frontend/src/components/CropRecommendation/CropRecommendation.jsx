@@ -55,8 +55,8 @@ function CropRecommendation() {
     setIsLoading(true);
 
     try {
-      const apiKey = 'AIzaSyDgsrTya7QBVnWkiZxn5564ZwmVJYMeKX8';
-      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+      const apiKey = import.meta.env.VITE_API_KEY;
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
       const prompt = {
         contents: [{
