@@ -38,7 +38,7 @@
 import React, { useState } from 'react';
 import { IoMdHome } from "react-icons/io";
 import { FaUser } from "react-icons/fa";
-import { Globe, ChevronDown } from 'lucide-react';
+import { Globe, ChevronDown, Link } from 'lucide-react';
 import logo from '../../assets/images/logo.png';
 
 const Navbar = () => {
@@ -55,6 +55,9 @@ const Navbar = () => {
 
       <nav className="links">
         <ul>
+          <li>
+          <a href="/cropintelligence"><IoMdHome className=''/>Crop Intelligence</a>
+          </li>
           <li>
             <a href="#"><IoMdHome className='icon' /></a>
           </li>
