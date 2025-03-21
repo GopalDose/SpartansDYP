@@ -8,12 +8,8 @@ import Home from './pages/Home';
 import CropRecommendation from './components/CropRecommendation/CropRecommendation';
 import CropRecommendationOutput from './components/CropRecommendationOutput/CropRecommendationOutput';
 import FuturePrice from './components/FuturePrice/FuturePrice';
-import { SiChatbot } from "react-icons/si";
 import YeildTable from './components/YeildTable/YeildTable';
 import Chatbot from "./components/Chatbot/Chatbot";
-
-// Optional: Import the translation hook if you need direct access to translation functions
-import { useTranslation } from './contexts/TranslationContext';
 import PrevYield from './components/PrevYield/PrevYield';
 import FinancialPlanning from './components/FinancialPlanning/FinancialPlanning';
 import Finance from './components/Finance/Finance';
@@ -51,28 +47,25 @@ const App = () => {
           />
 
           <Routes>
+            {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<Registration />} /> 
-            <Route 
-        path="/dashboard" 
-        element={
-          <ProtectedRoute>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/crop-recc" element={<CropRecommendation />} />
-            <Route path="/crop-recc-out" element={<CropRecommendationOutput />} />
-            <Route path="/price" element={<FuturePrice />} />
-            <Route path="/yield/:id" element={<YeildTable />} />
-            <Route path="/prevyield" element={<PrevYield />} />
-            <Route path="/finance/:id" element={<FinancialPlanning />} />
-            <Route path="/finance" element={<Finance />} />
-            </ProtectedRoute>
-        }/>
+
+            {/* Protected Routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/crop-recc" element={<CropRecommendation />} />
+              <Route path="/crop-recc-out" element={<CropRecommendationOutput />} />
+              <Route path="/price" element={<FuturePrice />} />
+              <Route path="/yield/:id" element={<YeildTable />} />
+              <Route path="/prevyield" element={<PrevYield />} />
+              <Route path="/finance/:id" element={<FinancialPlanning />} />
+              <Route path="/finance" element={<Finance />} />
+            </Route>
           </Routes>
 
           {/* Chatbot component */}
           <Chatbot />
-
-          
         </>
       )}
     </Router>
